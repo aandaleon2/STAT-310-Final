@@ -11,8 +11,8 @@ poc$region <- as.factor(poc$region)
 # Subset Data into Two Datasets
 library(tidyverse)
 poc0 <- poc %>% group_by(region)
-poc1 <- poc1 %>% select(1:8) #Group 1: 2013-2015
-poc2 <- poc1 %>% select(1:3, 9:13) #Group 2: 2016-2019
+poc1 <- poc %>% select(1:8) #Group 1: 2013-2015
+poc2 <- poc %>% select(1:3, 9:13) #Group 2: 2016-2019
 View(poc1); View(poc2)
 
 # Add Living Wage Variable - - - - - (Binary Response Variable)
@@ -28,7 +28,7 @@ poc1 <- poc1 %>% mutate(y = case_when(living_wage == 'yes' ~ 1,
                                           living_wage == 'no' ~ 0))
 poc1 <- poc1 %>% relocate(averagecontract_salary...8, .before = contract_2013_15)
 poc1 <- poc1 %>% relocate(living_wage, .after = averagecontract_salary...8)
-poc2 <- poc2 %>% relocate(y, .after = living_wage)
+poc1 <- poc1 %>% relocate(y, .after = living_wage)
 View(poc1)
 
 ## Group 2: 2016-2019
