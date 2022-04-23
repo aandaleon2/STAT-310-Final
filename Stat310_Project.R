@@ -45,3 +45,19 @@ poc2 <- poc2 %>% relocate(averagecontract_salary...13, .before = contract_2016_1
 poc2 <- poc2 %>% relocate(living_wage, .after = averagecontract_salary...13)
 poc2 <- poc2 %>% relocate(y, .after = living_wage)
 View(poc2)
+
+# Model Selection Group 1: 2013-2015
+model1 <- glm(poc1$y ~ poc1$contract_2013_15+poc1$position+poc1$region+poc1$ethnicity+poc1$averagecontract_salary...8
+              +poc1$average_overscale...7+poc1$averagemin_salary...6)
+summary(model1)
+stepAIC(model1)
+logmodel1 <- glm(poc1$y~poc1$region+poc1$averagemin_salary...6)
+summary(logmodel1)
+
+# Model Selection Group 2: 2016-2019
+model2 <- glm(poc2$y ~ poc2$contract_2016_19+poc2$position+poc2$region+poc2$ethnicity+poc2$averagecontract_salary...13
+              +poc2$average_overscale...12+poc2$averagemin_salary...11)
+summary(model2)
+stepAIC(model2)
+logmodel2 <- glm(poc2$y ~ poc2$position+poc2$region+poc2$averagecontract_salary...13)
+summary(logmodel2)
