@@ -64,6 +64,19 @@ View(poc2)
 # Models
 ################################################
 
+##General information
+library(tree)
+library(rpart)
+library(rattle)
+library(RColorBrewer)
+library(rpart.plot)
+##Group1: 2013-2015
+tree.tit1 <- rpart(poc1$y1~.-poc1$y1, data=poc1, method="class")
+fancyRpartPlot(tree.tit1)
+##Group2: 2016-2019
+tree.tit2 <- rpart(poc2$y2~.-poc2$y2, data=poc2, method="class")
+fancyRpartPlot(tree.tit2)
+
 # Model Selection Group 1: 2013-2015
 model1 <- glm(poc1$y ~ poc1$contract_2013_15+poc1$position+poc1$region+poc1$ethnicity+poc1$averagecontract_salary...8
               +poc1$average_overscale...7+poc1$averagemin_salary...6)
@@ -103,3 +116,15 @@ model4 <- gee(poc2$y2~poc2$race, id = poc2$race,
 summary(model4)
 ggplot(aes(x=poc2$averagemin_salary...11, y=poc2$region, colour=poc2$race), 
        data=poc2)+geom_point()
+
+##Compare living wage by race
+##Group1: 2013-2015
+living_wage1=ifelse(poc1$y1 == 0, "No", "Yes")
+white1=ifelse(poc1$race == 0, "No","Yes")
+poc11 <- table(living_wage1, white1)
+poc11
+##Group2: 2016-2019
+living_wage2=ifelse(poc2$y2 == 0, "No", "Yes")
+white2=ifelse(poc2$race == 0, "No","Yes")
+poc22 <- table(living_wage2, white2)
+poc22
