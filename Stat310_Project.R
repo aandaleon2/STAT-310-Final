@@ -79,3 +79,12 @@ summary(model2)
 stepAIC(model2)
 logmodel2 <- glm(poc2$y ~ poc2$position+poc2$region+poc2$averagecontract_salary...13)
 summary(logmodel2)
+
+# ggplot: analysis average contract salary by different race
+library(ggplot2)
+## Group1: 2013-2015
+ggplot(aes(x=poc1$averagecontract_salary...8, y=poc1$region, colour=poc1$ethnicity), 
+       data=poc1)+geom_point()
+## Group2: 2016-2019
+ggplot(aes(x=poc2$averagecontract_salary...13, y=poc2$region, colour=poc2$ethnicity), 
+       data=poc2)+geom_point()
