@@ -77,20 +77,21 @@ fancyRpartPlot(tree.tit1)
 tree.tit2 <- rpart(poc2$y2~.-poc2$y2, data=poc2, method="class")
 fancyRpartPlot(tree.tit2)
 
-# Model Selection Group 1: 2013-2015
-model1 <- glm(poc1$y ~ poc1$contract_2013_15+poc1$position+poc1$region+poc1$ethnicity+poc1$averagecontract_salary...8
-              +poc1$average_overscale...7+poc1$averagemin_salary...6)
+library(MASS)
+# Model Selection Group 1
+model1 <- glm(poc1$y1 ~ poc1$contract_2013_15+poc1$position+poc1$region+poc1$ethnicity+poc1$averagecontract_salary...8
+              +poc1$race+poc1$average_overscale...7+poc1$averagemin_salary...6)
 summary(model1)
 stepAIC(model1)
-logmodel1 <- glm(poc1$y~poc1$region+poc1$averagemin_salary...6)
+logmodel1 <- glm(poc1$y1~poc1$region+poc1$averagemin_salary...6)
 summary(logmodel1)
-
-# Model Selection Group 2: 2016-2019
-model2 <- glm(poc2$y ~ poc2$contract_2016_19+poc2$position+poc2$region+poc2$ethnicity+poc2$averagecontract_salary...13
-              +poc2$average_overscale...12+poc2$averagemin_salary...11)
+# Model Selection Group 2
+model2 <- glm(poc2$y2 ~ poc2$contract_2016_19+poc2$position+poc2$region+poc2$ethnicity+poc2$averagecontract_salary...13
+              +poc2$race+poc2$average_overscale...12+poc2$averagemin_salary...11)
 summary(model2)
 stepAIC(model2)
-logmodel2 <- glm(poc2$y ~ poc2$position+poc2$region+poc2$averagecontract_salary...13)
+logmodel2 <- glm(poc2$y2 ~ poc2$contract_2016_19+poc2$position+poc2$region
+                 +poc2$averagecontract_salary...13)
 summary(logmodel2)
 
 # ggplot: analysis average contract salary by different race
