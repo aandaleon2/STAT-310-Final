@@ -99,5 +99,3 @@ summary(model11)
 summary(model22)
 Anova(model11)
 Anova(model22)
-
-# Q3
