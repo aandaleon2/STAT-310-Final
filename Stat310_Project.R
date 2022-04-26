@@ -103,14 +103,14 @@ ggplot(aes(x=poc1$averagecontract_salary...8, y=poc1$region, colour=poc1$ethnici
 ggplot(aes(x=poc2$averagecontract_salary...13, y=poc2$region, colour=poc2$ethnicity), 
        data=poc2)+geom_point()
 
-##GEE check the.....
+##GEE Test 
 library(gee)
 ##Group2: 2013-2015
 model3 <- gee(poc1$y1~poc1$race, id = poc1$race, 
                            family = binomial(link = "identity"), data = poc1)
-summary(model3)
-ggplot(aes(x=poc1$averagecontract_salary...8, y=poc1$region, colour=poc1$race), 
-       data=poc1)+geom_point()
+model4 <- gee(poc2$y2~poc2$race, id = poc2$race, 
+                           family = binomial(link = "identity"), data = poc2)
+
 ##Group2: 2016-2019
 model4 <- gee(poc2$y2~poc2$race, id = poc2$race, 
               family = binomial(link = "identity"), data = poc2)
