@@ -15,7 +15,8 @@ poc1 <- poc %>% select(1:8) #Group 1: 2013-2015
 poc2 <- poc %>% select(1:3, 9:13) #Group 2: 2016-2019
 View(poc1); View(poc2)
 
-# Add Living Wage Variable - - - - - (Binary Response Variable)
+# Add Living Wage Variable 
+# Add Binary Response Variable
 # Add Race Variable
 
 ## Group 1: 2013-2015
@@ -124,8 +125,111 @@ living_wage1=ifelse(poc1$y1 == 0, "No", "Yes")
 white1=ifelse(poc1$race == 0, "No","Yes")
 poc11 <- table(living_wage1, white1)
 poc11
+
 ##Group2: 2016-2019
 living_wage2=ifelse(poc2$y2 == 0, "No", "Yes")
 white2=ifelse(poc2$race == 0, "No","Yes")
 poc22 <- table(living_wage2, white2)
 poc22
+
+## For Question 2 Only
+# Model 1: Group 1 2013-2015
+poc$ethnicity <- relevel(poc$ethnicity, "White or European American")
+poc$position <- relevel(poc$position, "chorus")
+poc$region <- relevel(poc$region, "central")
+
+library(car)
+model1 <- glm(y1 ~ position + region + ethnicity + contract_2013_15, 
+              family = binomial(link = "logit"), data = poc1)
+
+model11 <- glm(y1 ~ position + region + race + contract_2013_15, 
+               family = binomial(link = "logit"), data = poc1)
+
+# Model 2: Group 2 2016-2019
+model2 <- glm(y2 ~ position + region + ethnicity + contract_2016_19, 
+              family = binomial(link = "logit"), data = poc2) 
+
+model22 <- glm(y2 ~ position + region + race + contract_2016_19, 
+               family = binomial(link = "logit"), data = poc2)
+
+Anova(model1)
+Anova(model2)
+summary(model11)
+summary(model22)
+Anova(model11)
+Anova(model22)
+
+################################################
+# Appendix Only
+################################################
+
+# Living Wage
+library(dplyr)
+poc1 <- na.omit(poc1)
+poc2 <- na.omit(poc2)
+
+p1 <- poc1 %>% 
+  group_by(living_wage) %>%
+  count() %>% 
+  ungroup() %>% 
+  mutate(perc = `n` / sum(`n`)) %>% 
+  arrange(perc) %>%
+  mutate(labels = scales::percent(perc))
+
+ggplot(p1, aes(x = "", y = perc, fill = living_wage)) +
+  geom_col(color = "black") +
+  geom_label(aes(label = labels), color = c("white", "white"),
+             position = position_stack(vjust = 0.5),
+             show.legend = FALSE) +
+  guides(fill = guide_legend(
+    title = "Group 1 (2013-15): Meets Living Wage Thresholds?")) +
+  coord_polar(theta = "y") + 
+  scale_fill_discrete(labels = c("No", "Yes")) +
+  theme_void()
+
+p2 <- poc2 %>% 
+  group_by(living_wage) %>%
+  count() %>% 
+  ungroup() %>% 
+  mutate(perc = `n` / sum(`n`)) %>% 
+  arrange(perc) %>%
+  mutate(labels = scales::percent(perc))
+
+ggplot(p2, aes(x = "", y = perc, fill = living_wage)) +
+  geom_col(color = "black") +
+  geom_label(aes(label = labels), color = c("white", "white"),
+             position = position_stack(vjust = 0.5),
+             show.legend = FALSE) +
+  guides(fill = guide_legend(
+    title = "Group 2 (2016-19): Meets Living Wage Thresholds?")) +
+  coord_polar(theta = "y") + 
+  scale_fill_discrete(labels = c("No", "Yes")) +
+  theme_void()
+
+# Ethnicity & Living Wage
+par(mfrow = c(1,2))
+e1$poc1.living_wage <- as.numeric(poc1$living_wage)
+e1 <- table(poc1$living_wage,poc1$race)
+barplot(e1, xlab = 'White and BIPOC', ylab = 'Count', main 
+        = "2013-15 Living Wage on Region Threshold",
+        col = c("red","lightgreen"),
+        density = 50,
+        legend = rownames(e1), 
+        args.legend = list(x = "topleft"))
+
+e2$poc2.living_wage <- as.numeric(poc2$living_wage)
+e2 <- table(poc2$living_wage,poc2$race)
+barplot(e2, xlab = 'White and BIPOC', ylab = 'Count', main 
+        = "2016-19 Living Wage on Region Threshold",
+        col = c("red","lightgreen"),
+        density = 50,
+        legend = rownames(e1), 
+        args.legend = list(x = "topleft"))
+
+e.1 <- data.frame(poc1$ethnicity, poc1$living_wage)
+e.1 <- table(e.1)
+addmargins(e.1)
+
+e.2 <- data.frame(poc2$ethnicity, poc2$living_wage)
+e.2 <- table(e.2)
+addmargins(e.2)
